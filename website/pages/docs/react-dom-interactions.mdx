@@ -1,0 +1,136 @@
+# React DOM Interactions
+
+This package:
+
+- Exports primitive pieces (hooks and components) that compose
+  well together to build higher-level components in a fully
+  accessible manner.
+- Allows you to build custom logic on top.
+- Does not export pre-built or styled components.
+
+Floating elements tend to have various things in common, so each
+piece provides some primitive level of behavior that can be
+reused across a `<Tooltip />{:js}`, `<Popover />{:js}`,
+`<Select />{:js}` (etc) component.
+
+## Install
+
+```shell
+npm install @floating-ui/react-dom-interactions
+```
+
+```shell
+yarn add @floating-ui/react-dom-interactions
+```
+
+## Usage
+
+The `useFloating(){:js}` hook exported from this package is a
+superset of the standard `@floating-ui/react-dom{:.string}` hook.
+
+It accepts an `open{:.const}` boolean and
+`onOpenChange{:.objectKey}` as an option to change that value.
+You use this boolean to conditionally render the floating
+element.
+
+```js /open/
+import {useState} from 'react';
+import {useFloating} from '@floating-ui/react-dom-interactions';
+
+function App() {
+  const [open, setOpen] = useState(true);
+  const {x, y, reference, floating, strategy} = useFloating({
+    open,
+    onOpenChange: setOpen,
+  });
+
+  return (
+    <>
+      <button ref={reference}>Button</button>
+      {open && (
+        <div
+          ref={floating}
+          style={{
+            position: strategy,
+            top: y ?? '',
+            left: x ?? '',
+          }}
+        >
+          Tooltip
+        </div>
+      )}
+    </>
+  );
+}
+```
+
+## useInteractions
+
+This hook accepts an array of interaction hooks' return values,
+following a predictable form:
+
+```js /context/
+const {context} = useFloating();
+const {getReferenceProps, getFloatingProps} = useInteractions([
+  useHover(context, options),
+  useFocus(context, options),
+  useAria(context, options),
+  ...
+]);
+```
+
+Each hook accepts the `context{:.const}` object which gets
+returned from `useFloating(){:js}` as its first argument. Props
+are passed as a second argument.
+
+This API enables each of the hooks to be fully tree-shakeable.
+The navigation bar on the left explains them in detail.
+
+### Prop getters
+
+`useInteractions(){:js}` returns
+[prop getters](https://kentcdodds.com/blog/how-to-give-rendering-control-to-users-with-prop-getters)
+— functions you call to return props that spread on the elements:
+
+```js
+<>
+  <button {...getReferenceProps({ref: reference})}>
+    My button
+  </button>
+  <div
+    {...getFloatingProps({
+      ref: floating,
+      style: {
+        position: strategy,
+        left: x ?? '',
+        top: y ?? '',
+      },
+    })}
+  >
+    My tooltip
+  </div>
+</>
+```
+
+This pattern enables you to pass event listener props through the
+prop getters, which performs merging of its own internal event
+listeners and your own without overriding them.
+
+## Examples
+
+Here are a few example recipes for crafting common UI components
+(hosted on CodeSandbox).
+
+- [Tooltip](/docs/tooltip)
+- [Grouped Tooltips](/docs/tooltip)
+- [Popover](/docs/popover)
+- [Nested Popovers](/docs/popover)
+- [Dialog](/docs/dialog)
+- [Dropdown Menu](/docs/dropdown-menu)
+- [Dropdown Menu with Submenus](/docs/dropdown-menu)
+- [Select](/docs/select)
+- [macOS Select](/docs/select)
+
+The interaction hooks are low-level, so you probably won't be
+using them without wrapping them with your own component API for
+ergonomics.

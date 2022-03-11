@@ -1,0 +1,21 @@
+# FloatingOverlay
+
+Provides base styling for a fixed overlay element to dim content
+or block pointer events behind a floating element.
+
+It's a regular `<div />{:js}`, so it can be styled via any CSS
+solution you prefer.
+
+```js
+import {FloatingOverlay} from '@floating-ui/react-dom-interactions';
+
+function App() {
+  return (
+    <FloatingOverlay>
+      <MyFloatingElement>
+        <button>Open</button>
+      </MyFloatingElement>
+    </FloatingOverlay>
+  );
+}
+```

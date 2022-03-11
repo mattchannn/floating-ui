@@ -2,14 +2,15 @@
   "include": ["../packages/**/src/**/*.ts"],
   "exclude": ["../**/*.test.ts"],
   "compilerOptions": {
-    "target": "es2015",
-    "lib": ["dom", "es2017"],
+    "target": "es2021",
+    "lib": ["dom", "es2021"],
     "moduleResolution": "node",
     "module": "es2015",
     "removeComments": false,
     "skipLibCheck": true,
     "declaration": true,
     "emitDeclarationOnly": true,
+    "jsx": "react-jsx",
     "outDir": "../packages"
   }
 }

@@ -1,0 +1,112 @@
+# useTypeahead
+
+Provides a transient string via a callback as the user types,
+often used in tandem with `useListNavigation(){:js}`.
+
+```js /useTypeahead/
+import {
+  useFloating,
+  useInteractions,
+  useTypeahead,
+} from '@floating-ui/react-dom-interactions';
+
+// ...
+const {context} = useFloating();
+const {getReferenceProps, getFloatingProps} = useInteractions([
+  useTypeahead(context, {
+    // props
+  }),
+]);
+```
+
+## Props
+
+```js
+interface Props {
+  listRef: React.MutableRefObject<Array<string | null>>;
+  onMatch: (index: number) => void;
+  enabled?: boolean;
+  onFind?: (
+    itemString: string | null,
+    typedString: string
+  ) => boolean;
+  debounceMs?: number;
+  ignoreKeys?: Array<string>;
+}
+```
+
+### listRef
+
+default: empty list
+
+A ref which contains an array of strings whose indices match the
+HTML elements of the list.
+
+### onMatch
+
+default: noop
+
+Callback invoked with the matching index if found as the user
+types.
+
+```js
+const [open, setOpen] = useState(false);
+const [activeIndex, setActiveIndex] = useState(null);
+const [selectedIndex, setSelectedIndex] = useState(null);
+
+useTypeahead(context, {
+  onMatch: open ? setActiveIndex : setSelectedIndex,
+});
+```
+
+### enabled
+
+default: `true{:js}`
+
+Conditionally enable/disable the hook.
+
+```js
+useTypeahead(context, {
+  enabled: false,
+});
+```
+
+### onFind
+
+default: lowercase finder
+
+If you'd like to implement custom `.find(){:js}` logic (for
+example, fuzzy search), you can use this callback.
+
+```js
+useTypeahead(context, {
+  onFind: (itemString, typedString) =>
+    itemString?.toLowerCase().indexOf(typedString) === 0,
+});
+```
+
+### debounceMs
+
+default: `500{:js}`
+
+Debounce timeout which will reset the transient string.
+
+### ignoreKeys
+
+default: `[]{:js}`
+
+Additional keys to ignore as well as the following:
+
+```js
+[
+  'Home',
+  'End',
+  'Escape',
+  'Enter',
+  'Tab',
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+];
+```

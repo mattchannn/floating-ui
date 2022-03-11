@@ -1,0 +1,89 @@
+# useAria
+
+Adds relevant screen reader props for a given element
+`role{:.objectKey}`.
+
+```js /useAria/
+import {
+  useFloating,
+  useInteractions,
+  useAria,
+} from '@floating-ui/react-dom-interactions';
+
+// ...
+const {context} = useFloating();
+const {getReferenceProps, getFloatingProps} = useInteractions([
+  useAria(context, {
+    // props
+  }),
+]);
+```
+
+## Props
+
+```js
+interface Props {
+  enabled?: boolean;
+  role?: 'dialog' | 'tooltip' | 'menu' | 'listbox';
+  labelId?: string;
+  descriptionId?: string;
+}
+```
+
+### enabled
+
+default: `true{:js}`
+
+Conditionally enable/disable the hook.
+
+```js
+useAria(context, {
+  enabled: false,
+});
+```
+
+### role
+
+default: `'dialog'{:js}`
+
+The role of the floating element.
+
+```js
+useAria(context, {
+  role: 'tooltip',
+});
+```
+
+### labelId
+
+default: `undefined{:js}`
+
+The id of the node that labels the floating element. Screen
+readers will announce this label once the floating element or any
+of its children have focus.
+
+You can generate an id using `useFloatingId(){:js}`:
+
+```js
+import {useFloatingId} from '@floating-ui/react-dom-interactions';
+
+// ...
+const labelId = useFloatingId();
+```
+
+### descriptionId
+
+default: `undefined{:js}`
+
+The id of the node that describes the floating element. Screen
+readers will announce this description once the floating element
+or any of its children have focus.
+
+You can generate an id using `useFloatingId(){:js}`:
+
+```js
+import {useFloatingId} from '@floating-ui/react-dom-interactions';
+
+// ...
+const descriptionId = useFloatingId();
+```
